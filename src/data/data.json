@@ -1,0 +1,168 @@
+
+{
+  "user": {
+    "name": "Alex Johnson",
+    "currency": "USD"
+  },
+  "transactions": [
+    {
+      "id": "txn_1",
+      "date": "2024-07-28T10:30:00Z",
+      "description": "Monthly Salary",
+      "category": "Income",
+      "amount": 5000,
+      "type": "income"
+    },
+    {
+      "id": "txn_2",
+      "date": "2024-07-27T14:00:00Z",
+      "description": "Groceries at SuperMart",
+      "category": "Food",
+      "amount": 75.50,
+      "type": "expense"
+    },
+    {
+      "id": "txn_3",
+      "date": "2024-07-26T09:15:00Z",
+      "description": "Coffee Shop",
+      "category": "Food",
+      "amount": 4.75,
+      "type": "expense"
+    },
+    {
+      "id": "txn_4",
+      "date": "2024-07-25T18:00:00Z",
+      "description": "Dinner with Friends",
+      "category": "Social",
+      "amount": 62.00,
+      "type": "expense"
+    },
+    {
+      "id": "txn_5",
+      "date": "2024-07-25T10:00:00Z",
+      "description": "Electricity Bill Payment",
+      "category": "Utilities",
+      "amount": 85.00,
+      "type": "expense"
+    },
+    {
+      "id": "txn_6",
+      "date": "2024-07-24T12:30:00Z",
+      "description": "Online Course Subscription",
+      "category": "Education",
+      "amount": 29.99,
+      "type": "expense"
+    },
+    {
+      "id": "txn_7",
+      "date": "2024-07-23T16:45:00Z",
+      "description": "New Book Purchase",
+      "category": "Entertainment",
+      "amount": 15.20,
+      "type": "expense"
+    },
+    {
+      "id": "txn_8",
+      "date": "2024-07-22T08:00:00Z",
+      "description": "Gasoline for Car",
+      "category": "Transport",
+      "amount": 40.00,
+      "type": "expense"
+    },
+    {
+      "id": "txn_9",
+      "date": "2024-07-21T19:30:00Z",
+      "description": "Movie Tickets",
+      "category": "Entertainment",
+      "amount": 25.00,
+      "type": "expense"
+    },
+    {
+      "id": "txn_10",
+      "date": "2024-07-20T11:00:00Z",
+      "description": "Freelance Project Payment",
+      "category": "Income",
+      "amount": 750,
+      "type": "income"
+    },
+    {
+      "id": "txn_11",
+      "date": "2024-07-19T13:15:00Z",
+      "description": "Lunch Meeting",
+      "category": "Food",
+      "amount": 35.50,
+      "type": "expense"
+    },
+    {
+      "id": "txn_12",
+      "date": "2024-07-18T17:00:00Z",
+      "description": "Gym Membership",
+      "category": "Health",
+      "amount": 50.00,
+      "type": "expense"
+    }
+  ],
+  "savingsPots": [
+    {
+      "id": "pot_1",
+      "name": "Vacation Fund",
+      "goal": 2000,
+      "currentAmount": 850,
+      "targetDate": "2024-12-20T00:00:00Z",
+      "icon": "Plane"
+    },
+    {
+      "id": "pot_2",
+      "name": "New Laptop",
+      "goal": 1500,
+      "currentAmount": 1200,
+      "targetDate": "2024-09-30T00:00:00Z",
+      "icon": "Laptop"
+    },
+    {
+      "id": "pot_3",
+      "name": "Emergency Fund",
+      "goal": 5000,
+      "currentAmount": 3500,
+      "icon": "ShieldAlert"
+    }
+  ],
+  "recurringBills": [
+    {
+      "id": "bill_1",
+      "name": "Netflix Subscription",
+      "category": "Entertainment",
+      "amount": 15.99,
+      "dueDateDescription": "Monthly on 1st",
+      "nextDueDate": "2024-08-01T00:00:00Z",
+      "status": "paid"
+    },
+    {
+      "id": "bill_2",
+      "name": "Rent Payment",
+      "category": "Housing",
+      "amount": 1200,
+      "dueDateDescription": "Monthly on 5th",
+      "nextDueDate": "2024-08-05T00:00:00Z",
+      "status": "due"
+    },
+    {
+      "id": "bill_3",
+      "name": "Internet Bill",
+      "category": "Utilities",
+      "amount": 60,
+      "dueDateDescription": "Monthly on 10th",
+      "nextDueDate": "2024-08-10T00:00:00Z",
+      "status": "due"
+    },
+    {
+      "id": "bill_4",
+      "name": "Phone Bill",
+      "category": "Utilities",
+      "amount": 45,
+      "dueDateDescription": "Monthly on 15th",
+      "nextDueDate": "2024-07-15T00:00:00Z",
+      "status": "overdue"
+    }
+  ]
+}
