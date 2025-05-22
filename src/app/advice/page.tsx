@@ -8,7 +8,7 @@ import { analyzeTransactions } from '@/ai/flows/transaction-insights';
 import type { AnalyzeTransactionsOutput } from '@/ai/flows/transaction-insights';
 import { getTransactionsSync } from '@/lib/data-loader';
 import type { Transaction } from '@/data/types';
-import { Sparkles, Loader2 } from 'lucide-react';
+import { Sparkles, Loader2, AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function SmartAdvicePage() {

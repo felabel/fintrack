@@ -1,13 +1,14 @@
+'use client';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { getAppDataSync, formatCurrency, formatDate } from "@/lib/data-loader";
 import type { Transaction, SavingsPot } from "@/data/types";
-import { ArrowUpRight, ArrowDownLeft, PiggyBank as PiggyBankIcon, Target, TrendingUp, FileText, AlertTriangle } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, PiggyBank as PiggyBankIcon, Target, TrendingUp, FileText, AlertTriangle, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Pie, PieChart, Cell } from "recharts";
 
 export default function DashboardPage() {
