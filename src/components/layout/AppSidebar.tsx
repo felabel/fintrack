@@ -10,12 +10,9 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/Logo';
-import { Home, ArrowRightLeft, PiggyBank, Landmark, Sparkles, Settings, LogOut, HelpCircle } from 'lucide-react';
+import { Home, ArrowRightLeft, PiggyBank, Landmark, Wallet, Sparkles, Settings, LogOut, HelpCircle } from 'lucide-react'; // Added Wallet
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -24,6 +21,7 @@ const navItems = [
   { href: '/', label: 'Dashboard', icon: Home },
   { href: '/transactions', label: 'Transactions', icon: ArrowRightLeft },
   { href: '/savings', label: 'Savings Pots', icon: PiggyBank },
+  { href: '/budgets', label: 'Budgets', icon: Wallet }, // Added Budgets
   { href: '/bills', label: 'Recurring Bills', icon: Landmark },
   { href: '/advice', label: 'Smart Advice', icon: Sparkles },
 ];

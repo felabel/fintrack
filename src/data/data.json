@@ -164,5 +164,40 @@
       "nextDueDate": "2024-07-15T00:00:00Z",
       "status": "overdue"
     }
+  ],
+  "budgets": [
+    {
+      "id": "budget_1",
+      "name": "Monthly Food Budget",
+      "category": "Food",
+      "amount": 400,
+      "spentAmount": 115.75,
+      "period": "monthly",
+      "startDate": "2024-07-01T00:00:00Z",
+      "endDate": "2024-07-31T23:59:59Z",
+      "icon": "ShoppingBasket"
+    },
+    {
+      "id": "budget_2",
+      "name": "Entertainment Budget",
+      "category": "Entertainment",
+      "amount": 150,
+      "spentAmount": 40.20,
+      "period": "monthly",
+      "startDate": "2024-07-01T00:00:00Z",
+      "endDate": "2024-07-31T23:59:59Z",
+      "icon": "Film"
+    },
+    {
+      "id": "budget_3",
+      "name": "Overall Monthly Spending",
+      "category": "Overall",
+      "amount": 2000,
+      "spentAmount": 437.44,
+      "period": "monthly",
+      "startDate": "2024-07-01T00:00:00Z",
+      "endDate": "2024-07-31T23:59:59Z",
+      "icon": "Wallet"
+    }
   ]
 }
