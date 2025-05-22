@@ -1,58 +1,63 @@
+
 "use client";
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { getAppDataSync, formatCurrency, formatDate } from "@/lib/data-loader";
-import type { Transaction, SavingsPot } from "@/data/types";
-import {
-  ArrowUpRight,
-  ArrowDownLeft,
-  PiggyBank as PiggyBankIcon,
-  Target,
-  TrendingUp,
-  FileText,
-  AlertTriangle,
-  Sparkles,
-} from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  Pie,
-  PieChart,
-  Cell,
-} from "recharts";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAppDataSync, formatCurrency, formatDate } from "@/lib/data-loader";
+import type { Transaction, SavingsPot, Budget, RecurringBill, AppData } from "@/data/types";
+import { DollarSign, ChevronRight, TrendingUp, TrendingDown, ReceiptText, Palette, ShoppingBag, Heart, Car, Briefcase, Home as HomeIcon } from 'lucide-react';
+import { BudgetDonutChart } from '@/components/layout/BudgetDonutChart';
+
+
+// Helper to get a color for index, cycling through chart colors
+const getSafeChartColor = (index: number) => {
+  const chartColors = ['--chart-1', '--chart-2', '--chart-3', '--chart-4', '--chart-5'];
+  return `hsl(var(${chartColors[index % chartColors.length]}))`;
+};
+
+// Helper for transaction icons (simplified)
+const getTransactionIcon = (category: string, description: string) => {
+    const lowerDesc = description.toLowerCase();
+    if (lowerDesc.includes('emma') || lowerDesc.includes('daniel') || lowerDesc.includes('sun park')) {
+        return <Image src={`https://placehold.co/40x40.png`} alt={description} width={40} height={40} className="rounded-full" data-ai-hint="person" />;
+    }
+    switch (category) {
+        case 'Food': return <ShoppingBag className="h-5 w-5 text-muted-foreground" />;
+        case 'Utilities': return <HomeIcon className="h-5 w-5 text-muted-foreground" />;
+        case 'Transport': return <Car className="h-5 w-5 text-muted-foreground" />;
+        case 'Income': return <DollarSign className="h-5 w-5 text-muted-foreground" />;
+        default: return <ReceiptText className="h-5 w-5 text-muted-foreground" />;
+    }
+};
+
 
 export default function DashboardPage() {
-  const { transactions, savingsPots, recurringBills, user } = getAppDataSync();
-  const currency = user.currency;
+  const [appData, setAppData] = useState<AppData | null>(null);
 
-  const recentTransactions = transactions.slice(0, 5);
+  useEffect(() => {
+    setAppData(getAppDataSync());
+  }, []);
+
+  if (!appData) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  const { transactions, savingsPots, budgets, recurringBills, user } = appData;
+  const currency = user.currency;
 
   const totalIncome = transactions
     .filter((t) => t.type === "income")
@@ -60,253 +65,181 @@ export default function DashboardPage() {
   const totalExpenses = transactions
     .filter((t) => t.type === "expense")
     .reduce((sum, t) => sum + t.amount, 0);
-  const balance = totalIncome - totalExpenses;
+  const currentBalance = totalIncome - totalExpenses;
 
-  const spendingByCategory = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((acc, t) => {
-      acc[t.category] = (acc[t.category] || 0) + t.amount;
-      return acc;
-    }, {} as Record<string, number>);
+  const recentTransactions = transactions.slice(0, 5);
 
-  const spendingChartData = Object.entries(spendingByCategory)
-    .map(([name, value]) => ({ name, value }))
-    .sort((a, b) => b.value - a.value)
-    .slice(0, 5);
+  const totalSavedInPots = savingsPots.reduce((sum, pot) => sum + pot.currentAmount, 0);
 
-  const chartConfig = {
-    value: { label: currency, color: "hsl(var(--primary))" },
-  } satisfies import("@/components/ui/chart").ChartConfig;
+  const overallBudget = budgets.find(b => b.category === "Overall") || budgets[0] || 
+    { name: "Overall Spending", amount: 2000, spentAmount: 0, category: "Overall" } as Budget;
+  
+  const budgetItemsForDisplay = budgets.filter(b => b.category !== "Overall").slice(0, 4);
 
-  const PIE_COLORS = [
-    "hsl(var(--chart-1))",
-    "hsl(var(--chart-2))",
-    "hsl(var(--chart-3))",
-    "hsl(var(--chart-4))",
-    "hsl(var(--chart-5))",
-  ];
-
-  const upcomingBills = recurringBills
-    .filter((b) => b.status === "due" || b.status === "overdue")
-    .slice(0, 3);
+  const paidBillsAmount = recurringBills
+    .filter(b => b.status === 'paid')
+    .reduce((sum, b) => sum + b.amount, 0);
+  const upcomingBillsAmount = recurringBills
+    .filter(b => b.status === 'due' || b.status === 'overdue')
+    .reduce((sum, b) => sum + b.amount, 0);
+  const dueSoonBillsAmount = recurringBills
+    .filter(b => b.status === 'due')
+    .reduce((sum, b) => sum + b.amount, 0);
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Card className="lg:col-span-1">
-        <CardHeader className="pb-2">
-          <CardDescription>Current Balance</CardDescription>
-          <CardTitle className="text-4xl text-primary">
-            {formatCurrency(balance, currency)}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-xs text-muted-foreground">
-            {formatCurrency(totalIncome, currency)} income vs{" "}
-            {formatCurrency(totalExpenses, currency)} expenses
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Link href="/transactions" legacyBehavior passHref>
-            <Button size="sm" variant="outline">
-              View All Transactions
-            </Button>
-          </Link>
-        </CardFooter>
-      </Card>
-
-      <Card className="lg:col-span-2">
-        <CardHeader>
-          <CardTitle>Recent Transactions</CardTitle>
-          <CardDescription>Your latest financial activities.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Description</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recentTransactions.map((transaction: Transaction) => (
-                <TableRow key={transaction.id}>
-                  <TableCell>
-                    <div className="font-medium">{transaction.description}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {formatDate(transaction.date)}
-                    </div>
-                  </TableCell>
-                  <TableCell>{transaction.category}</TableCell>
-                  <TableCell
-                    className={`text-right font-medium ${
-                      transaction.type === "income"
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {transaction.type === "income" ? "+" : "-"}
-                    {formatCurrency(transaction.amount, currency)}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      <Card className="lg:col-span-3">
-        <CardHeader>
-          <CardTitle>Spending Overview</CardTitle>
-          <CardDescription>
-            Top 5 spending categories this period.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="h-[300px] w-full">
-          <ChartContainer config={chartConfig} className="h-full w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={spendingChartData}
-                layout="vertical"
-                margin={{ right: 20 }}
-              >
-                <CartesianGrid horizontal={false} />
-                <XAxis
-                  type="number"
-                  dataKey="value"
-                  tickFormatter={(value) =>
-                    formatCurrency(value, currency).replace(currency, "")
-                  }
-                />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  width={100}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
-                />
-                <Bar
-                  dataKey="value"
-                  fill="hsl(var(--primary))"
-                  radius={4}
-                  barSize={30}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </CardContent>
-      </Card>
-
-      {savingsPots.slice(0, 3).map((pot: SavingsPot) => (
-        <Card key={pot.id}>
+    <div className="space-y-6">
+      {/* Header Cards */}
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card className="md:col-span-1 bg-foreground text-background dark:bg-card dark:text-card-foreground rounded-xl shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              {pot.icon ? (
-                <PiggyBankIcon className="h-6 w-6 text-primary" />
-              ) : (
-                <Target className="h-6 w-6 text-primary" />
-              )}
-              {pot.name}
-            </CardTitle>
-            <CardDescription>
-              Goal: {formatCurrency(pot.goal, currency)}
-              {pot.targetDate && ` by ${formatDate(pot.targetDate)}`}
-            </CardDescription>
+            <CardDescription className="text-muted-foreground dark:text-muted-foreground/80">Current Balance</CardDescription>
+            <CardTitle className="text-4xl font-bold text-background dark:text-primary">{formatCurrency(currentBalance, currency)}</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Progress
-              value={(pot.currentAmount / pot.goal) * 100}
-              className="mb-2 h-3"
-            />
-            <div className="text-sm font-medium">
-              {formatCurrency(pot.currentAmount, currency)} saved (
-              {Math.round((pot.currentAmount / pot.goal) * 100)}%)
-            </div>
-          </CardContent>
-          <CardFooter>
+        </Card>
+        <Card className="rounded-xl shadow-md">
+          <CardHeader>
+            <CardDescription>Income</CardDescription>
+            <CardTitle className="text-3xl font-semibold text-green-600">{formatCurrency(totalIncome, currency)}</CardTitle>
+          </CardHeader>
+        </Card>
+        <Card className="rounded-xl shadow-md">
+          <CardHeader>
+            <CardDescription>Expenses</CardDescription>
+            <CardTitle className="text-3xl font-semibold text-red-600">{formatCurrency(totalExpenses, currency)}</CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Pots Section */}
+        <Card className="lg:col-span-1 rounded-xl shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Pots</CardTitle>
             <Link href="/savings" legacyBehavior passHref>
-              <Button size="sm" variant="outline">
-                Manage Pots
+              <Button variant="ghost" size="sm" className="text-sm text-primary hover:text-primary/80">
+                See Details <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </Link>
-          </CardFooter>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="bg-secondary/30 p-4 rounded-lg flex items-center space-x-4">
+              <div className="bg-primary/10 p-3 rounded-full">
+                <DollarSign className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Total Saved</p>
+                <p className="text-2xl font-bold">{formatCurrency(totalSavedInPots, currency)}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {savingsPots.slice(0, 4).map((pot, index) => (
+                <div key={pot.id} className="flex items-center space-x-2">
+                  <div className="w-1 h-6 rounded-full" style={{ backgroundColor: getSafeChartColor(index) }}></div>
+                  <div>
+                    <p className="text-sm font-medium truncate">{pot.name}</p>
+                    <p className="text-xs text-muted-foreground">{formatCurrency(pot.currentAmount, currency)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
         </Card>
-      ))}
 
-      {upcomingBills.length > 0 && (
-        <Card className="lg:col-span-1">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-6 w-6 text-primary" />
-              Upcoming Bills
-            </CardTitle>
-            <CardDescription>Key bills needing attention.</CardDescription>
+        {/* Budgets Section */}
+        <Card className="lg:col-span-2 rounded-xl shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Budgets</CardTitle>
+            <Link href="/budgets" legacyBehavior passHref>
+              <Button variant="ghost" size="sm" className="text-sm text-primary hover:text-primary/80">
+                See Details <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent className="grid md:grid-cols-2 gap-6 items-center">
+            <div className="h-52 md:h-60 relative">
+               {overallBudget ? (
+                 <BudgetDonutChart
+                    spent={overallBudget.spentAmount}
+                    total={overallBudget.amount}
+                    currency={currency}
+                 />
+               ) : <p className="text-center text-muted-foreground">No budget data</p>}
+            </div>
+            <div className="space-y-3">
+              {budgetItemsForDisplay.map((budget, index) => (
+                <div key={budget.id} className="flex items-center space-x-3">
+                  <div className="w-1.5 h-8 rounded-full" style={{ backgroundColor: getSafeChartColor(index) }}></div>
+                  <div>
+                    <p className="text-sm font-medium">{budget.category}</p>
+                    <p className="text-xs text-muted-foreground">{formatCurrency(budget.spentAmount, currency)} of {formatCurrency(budget.amount, currency)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Transactions Section */}
+        <Card className="lg:col-span-2 rounded-xl shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Transactions</CardTitle>
+            <Link href="/transactions" legacyBehavior passHref>
+              <Button variant="ghost" size="sm" className="text-sm text-primary hover:text-primary/80">
+                View All <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
           </CardHeader>
           <CardContent>
-            {upcomingBills.map((bill) => (
-              <div
-                key={bill.id}
-                className="mb-3 pb-3 border-b last:border-b-0 last:mb-0 last:pb-0"
-              >
-                <div className="flex justify-between items-center">
-                  <span className="font-medium">{bill.name}</span>
-                  <Badge
-                    variant={
-                      bill.status === "overdue" ? "destructive" : "secondary"
-                    }
-                  >
-                    {bill.status.charAt(0).toUpperCase() + bill.status.slice(1)}
-                  </Badge>
+            <ul className="space-y-1">
+              {recentTransactions.map((transaction) => (
+                <li key={transaction.id} className="flex items-center py-3 border-b last:border-b-0">
+                  <Avatar className="h-10 w-10 mr-3">
+                     {getTransactionIcon(transaction.category, transaction.description)}
+                  </Avatar>
+                  <div className="flex-grow">
+                    <p className="font-medium text-sm">{transaction.description}</p>
+                    <p className="text-xs text-muted-foreground">{formatDate(transaction.date, { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                  </div>
+                  <div className={`text-sm font-semibold ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                    {transaction.type === 'income' ? '+' : '-'}
+                    {formatCurrency(transaction.amount, currency)}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+
+        {/* Recurring Bills Section */}
+        <Card className="lg:col-span-1 rounded-xl shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Recurring Bills</CardTitle>
+            <Link href="/bills" legacyBehavior passHref>
+              <Button variant="ghost" size="sm" className="text-sm text-primary hover:text-primary/80">
+                See Details <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {[
+              { label: 'Paid Bills', amount: paidBillsAmount, colorIndex: 0 },
+              { label: 'Total Upcoming', amount: upcomingBillsAmount, colorIndex: 1 },
+              { label: 'Due Soon', amount: dueSoonBillsAmount, colorIndex: 2 },
+            ].map((item, index) => (
+              <div key={item.label} className="flex items-center space-x-3 p-3 bg-secondary/30 rounded-lg">
+                <div className="w-1.5 h-8 rounded-full" style={{ backgroundColor: getSafeChartColor(item.colorIndex) }}></div>
+                <div className="flex-grow">
+                  <p className="text-sm font-medium">{item.label}</p>
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  {formatCurrency(bill.amount, currency)} due{" "}
-                  {formatDate(bill.nextDueDate)}
-                </div>
+                <p className="text-sm font-semibold">{formatCurrency(item.amount, currency)}</p>
               </div>
             ))}
           </CardContent>
-          <CardFooter>
-            <Link href="/bills" legacyBehavior passHref>
-              <Button size="sm" variant="outline">
-                View All Bills
-              </Button>
-            </Link>
-          </CardFooter>
         </Card>
-      )}
-
-      <Card className="lg:col-span-2">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-accent" />
-            Smart Advice
-          </CardTitle>
-          <CardDescription>
-            Get personalized financial insights.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
-            Analyze your spending habits and get AI-powered recommendations to
-            improve your financial health.
-          </p>
-        </CardContent>
-        <CardFooter>
-          <Link href="/advice" legacyBehavior passHref>
-            <Button
-              size="sm"
-              variant="default"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground"
-            >
-              Get Advice Now
-            </Button>
-          </Link>
-        </CardFooter>
-      </Card>
+      </div>
     </div>
   );
 }
+

@@ -30,8 +30,8 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar collapsible="icon" side="left" variant="sidebar" className="border-r">
-      <SidebarHeader className="flex items-center gap-2 p-4">
+    <Sidebar collapsible="icon" side="right" variant="sidebar" className="flex border-r">
+      <SidebarHeader className="items-center gap-2 p-4">
         <Logo />
         <h2 className="text-xl font-semibold text-primary group-data-[collapsible=icon]:hidden">
           FinTrack Lite

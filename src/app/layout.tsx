@@ -1,6 +1,7 @@
+
 import type { Metadata } from 'next';
-import { GeistSans as FontSans } from 'geist/font/sans';
-import { GeistMono as FontMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans'; // Corrected import
+import { GeistMono } from 'geist/font/mono'; // Corrected import
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
@@ -23,8 +24,8 @@ export default function RootLayout({
       <body
         className={cn(
           'min-h-screen bg-background font-sans antialiased',
-          FontSans.variable,
-          FontMono.variable
+          GeistSans.variable, // Use .variable
+          GeistMono.variable  // Use .variable
         )}
       >
         <SidebarProvider defaultOpen={true}>
