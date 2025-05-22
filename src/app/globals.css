@@ -18,31 +18,32 @@ body {
     --primary-foreground: 0 0% 100%; /* White text on deep teal */
     --secondary: 180 40% 92%; /* Lighter teal for secondary elements */
     --secondary-foreground: 180 100% 20%; /* Darker teal text on light teal bg */
-    --muted: 240 4.8% 95.9%; 
+    --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
     --accent: 16 100% 65.7%; /* #FF7F50 coral */
     --accent-foreground: 0 0% 100%; /* White text on coral */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 87%; 
+    --border: 0 0% 87%;
     --input: 0 0% 90%;
     --ring: 16 100% 65.7%; /* Coral for focus rings */
     --radius: 0.5rem;
     --chart-1: 180 100% 25.1%; /* primary */
     --chart-2: 16 100% 65.7%; /* accent */
-    --chart-3: 180 60% 45%; 
+    --chart-3: 180 60% 45%;
     --chart-4: 16 80% 55%;
     --chart-5: 210 60% 50%;
 
     /* Sidebar specific theme variables */
     --sidebar-background: 0 0% 100%; /* White sidebar */
-    --sidebar-foreground: 240 10% 3.9%; /* Dark text */
-    --sidebar-primary: 180 100% 25.1%; /* Deep teal for active/primary elements */
-    --sidebar-primary-foreground: 0 0% 100%; /* White text */
-    --sidebar-accent: 0 0% 94.1%; /* Light gray for hover/accent */
-    --sidebar-accent-foreground: 240 10% 3.9%; /* Dark text on hover */
-    --sidebar-border: 0 0% 87%; 
-    --sidebar-ring: 16 100% 65.7%;
+    --sidebar-foreground: 240 10% 3.9%; /* Dark text for inactive items */
+    --sidebar-hover-background: 0 0% 96.1%; /* Light gray (e.g., #f5f5f5) for hover on inactive */
+    --sidebar-hover-foreground: 240 10% 3.9%; /* Dark text for hover on inactive */
+    --sidebar-active-background: 40 33% 96%; /* Light beige (e.g., #f7f5f2) for active item */
+    --sidebar-active-foreground: 180 100% 25.1%; /* Deep teal (main --primary) for active item text/icon */
+    --sidebar-active-border-color: 180 100% 25.1%; /* Deep teal (main --primary) for active item left border */
+    --sidebar-border: 0 0% 87%; /* Separators within sidebar */
+    --sidebar-ring: 16 100% 65.7%; /* Focus ring, same as main accent */
   }
 
   .dark {
@@ -59,7 +60,7 @@ body {
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
     --accent: 16 100% 70%; /* Slightly lighter coral */
-    --accent-foreground: 240 10% 3.9%; 
+    --accent-foreground: 240 10% 3.9%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
@@ -72,14 +73,15 @@ body {
     --chart-5: 210 70% 60%;
 
     /* Sidebar specific theme variables for dark mode */
-    --sidebar-background: 240 6% 10%; /* Dark sidebar */
-    --sidebar-foreground: 0 0% 98%; /* Light text */
-    --sidebar-primary: 180 100% 35%; /* Lighter teal */
-    --sidebar-primary-foreground: 0 0% 100%; /* White text */
-    --sidebar-accent: 240 3.7% 15.9%; /* Dark accent for hover */
-    --sidebar-accent-foreground: 0 0% 98%; /* Light text on hover */
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 16 100% 70%;
+    --sidebar-background: 240 6% 10%; /* Dark grey (e.g. #1a1a1a) for sidebar itself */
+    --sidebar-foreground: 0 0% 90%;   /* Lighter grey text (e.g. #e6e6e6) for inactive items */
+    --sidebar-hover-background: 240 6% 15%; /* Slightly lighter dark grey (e.g. #262626) for hover on inactive */
+    --sidebar-hover-foreground: 0 0% 98%;   /* White text (e.g. #fafafa) for hover on inactive */
+    --sidebar-active-background: 40 33% 96%; /* Light beige (e.g., #f7f5f2) for active item */
+    --sidebar-active-foreground: 180 100% 25.1%; /* Deep teal (main light theme --primary: #008080) for active item text/icon */
+    --sidebar-active-border-color: 180 100% 25.1%; /* Deep teal (main light theme --primary: #008080) for active item left border */
+    --sidebar-border: 240 4% 20%; /* Border for separators etc. (e.g. #303030) */
+    --sidebar-ring: 16 100% 70%; /* Focus ring, same as main dark accent */
   }
 }
 
