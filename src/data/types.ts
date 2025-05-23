@@ -27,6 +27,8 @@ export interface RecurringBill {
 }
 
 export interface Budget {
+  limit: number;
+  spent: any;
   id: string;
   name: string;
   category: string; // Can be a specific category or "Overall"

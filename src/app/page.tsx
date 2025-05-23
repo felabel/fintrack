@@ -17,6 +17,7 @@ import { getAppDataSync, formatCurrency, formatDate } from "@/lib/data-loader";
 import type { Transaction, SavingsPot, Budget, RecurringBill, AppData } from "@/data/types";
 import { DollarSign, ChevronRight, TrendingUp, TrendingDown, ReceiptText, Palette, ShoppingBag, Heart, Car, Briefcase, Home as HomeIcon } from 'lucide-react';
 import { BudgetDonutChart } from '@/components/layout/BudgetDonutChart';
+import { BudgetCategoryDonutChart } from '@/components/layout/BudgetCategoryDonutChart';
 
 
 // Helper to get a color for index, cycling through chart colors
@@ -155,28 +156,9 @@ export default function DashboardPage() {
               </Button>
             </Link>
           </CardHeader>
-          <CardContent className="grid md:grid-cols-2 gap-6 items-center">
-            <div className="h-52 md:h-60 relative">
-               {overallBudget ? (
-                 <BudgetDonutChart
-                    spent={overallBudget.spentAmount}
-                    total={overallBudget.amount}
-                    currency={currency}
-                 />
-               ) : <p className="text-center text-muted-foreground">No budget data</p>}
-            </div>
-            <div className="space-y-3">
-              {budgetItemsForDisplay.map((budget, index) => (
-                <div key={budget.id} className="flex items-center space-x-3">
-                  <div className="w-1.5 h-8 rounded-full" style={{ backgroundColor: getSafeChartColor(index) }}></div>
-                  <div>
-                    <p className="text-sm font-medium">{budget.category}</p>
-                    <p className="text-xs text-muted-foreground">{formatCurrency(budget.spentAmount, currency)} of {formatCurrency(budget.amount, currency)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
+          {/* <CardContent className="grid md:grid-cols-2 gap-6 items-center"> */}
+            <BudgetCategoryDonutChart />
+          {/* </CardContent> */}
         </Card>
       </div>
 
