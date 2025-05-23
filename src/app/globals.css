@@ -47,7 +47,7 @@ body {
     --chart-5: 350 80% 60%; /* pink/coral */
 
     /* Sidebar specific theme variables */
-    --sidebar-background: #201F24 /* 0 0% 100%; /* White sidebar */
+    --sidebar-background:  0 0% 100%; /* White sidebar */
     --sidebar-foreground: 220 15% 35%; /* Dark text for inactive items */
     --sidebar-hover-background: 210 40% 96.1%; /* Light gray (e.g., #f5f5f5) for hover on inactive */
     --sidebar-hover-foreground: 205 79% 46%; /* Primary blue for hover on inactive */
